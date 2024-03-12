@@ -10,14 +10,9 @@ export const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	tenantId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Tenant",
-		required: true,
-	},
 	role: {
 		type: String,
-		enum: ["admin", "management", "inspector"],
+		enum: ["owner", "admin", "management", "inspector"],
 		required: true,
 	},
 	createdAt: {

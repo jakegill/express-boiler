@@ -6,7 +6,7 @@ export const tenantSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    dbUri: {
+    dbName: {
         type: String,
         required: true,
     },

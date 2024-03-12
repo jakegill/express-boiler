@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { connectAllDb } from "../utils/connections/connectionManager";
+import { createTenantController } from "../controllers/createTenant.controller";
 
 const router = Router();
 
 /* ---------- Tenant Management ---------- */
 
-router.get("/api/v1/tenants", connectAllDb)
-router.post("/api/v1/tenants")
+router.post("/api/v1/tenants", createTenantController)
 
 router.get("/api/v1/tenants/:id")
 router.put("/api/v1/tenants/:id")
