@@ -2,16 +2,13 @@ import { getConnection } from "../tenant/connectionManager";
 import { userMetadataSchema } from "../../models/userMetadataSchema";
 import { tenantUserSchema } from "../../models/tenantUserSchema";
 
-
 type registerInput = {
     email: string;
     password: string;
-    companyName: string;
-    role: "owner" | "admin" | "management" | "inspector";
+    tenantName: string;
 }
 
-
-const registerUser = async ({ email, password, companyName, role } : registerInput) => {
+const registerUser = async ({ email, password, tenantName } : registerInput) => {
 
     // Get connection from cache.
     const catalog = getConnection("Catalog");
@@ -20,19 +17,14 @@ const registerUser = async ({ email, password, companyName, role } : registerInp
     }
 
     // Create user metadata in catalog.
-    const user = await catalog.model("User", userMetadataSchema).create({ email, password, companyName, role });
+    const user = await catalog.model("User", userMetadataSchema).create({ email, password, tenantName });
     if (!user) {
         throw new Error("User not created.");
     }
     const userId = user._id;
 
-    // Establish connection to tenant db.
-    const tenantDb = getConnection(companyName);
-    if (!tenantDb) {
-        throw new Error("Tenant connection not established.");
-    }
-
     // Store userId in tenant db.
+    const tenantDb = getConnection(tenantName);
     await tenantDb.model("User", tenantUserSchema).create({ _id: userId});
 
     return user;

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export const userMetadataSchema = new mongoose.Schema({
-	companyName: {
+	tenantName: {
 		type: String,
 		required: true,
 	},
@@ -16,7 +16,7 @@ export const userMetadataSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		enum: ["superAdmin","owner", "admin", "management", "inspector"],
+		enum: ["superAdmin", "admin", "management", "inspector"],
 		required: true,
 	},
 	createdAt: {

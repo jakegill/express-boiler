@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
 
 export const tenantMetadataSchema = new mongoose.Schema({
-    companyName: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    dbName: {
+    tenantName: {
         type: String,
         required: true,
     },

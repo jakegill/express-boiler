@@ -32,7 +32,7 @@ const loginUser = async ({ email, password} : loginInput) => {
     const userData = {
         id: user._id,
         role: user.role,
-        companyName: user.companyName,
+        tenantName: user.tenantName,
     };
     const token = jwt.sign(userData, JWT_SECRET, { expiresIn: '1h' });
 

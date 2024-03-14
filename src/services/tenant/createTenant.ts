@@ -5,8 +5,7 @@ import { userMetadataSchema } from "../../models/userMetadataSchema";
 import { tenantUserSchema } from "../../models/tenantUserSchema";  
 
 type createTenantInput = {
-    companyName: string;
-    dbName: string;
+    tenantName: string;
     adminEmail: string;
     adminPassword: string;
 };
@@ -19,13 +18,13 @@ Create a new user document in the users collection of the new tenant db using ad
 Set the new tenant connection in the connection cache.
 */
 
-const createTenant = async ({companyName, dbName, adminEmail, adminPassword} : createTenantInput) => {
+const createTenant = async ({tenantName, adminEmail, adminPassword} : createTenantInput) => {
     const catalogDb = getConnection("Catalog");
-    await catalogDb.model("Tenant", tenantMetadataSchema, "tenants").create({ companyName, dbName: companyName });
-    const owner = await catalogDb.model("User", userMetadataSchema, "users").create({ companyName, email: adminEmail, password: adminPassword, role: "owner"});
+    await catalogDb.model("Tenant", tenantMetadataSchema, "tenants").create({ tenantName });
+    const owner = await catalogDb.model("User", userMetadataSchema, "users").create({ tenantName, email: adminEmail, password: adminPassword, role: "admin"});
     const ownerId = owner._id;
     
-    const tenantDb = await initTenantConnection(companyName);
+    const tenantDb = await initTenantConnection(tenantName);
     try {
         await tenantDb.model("TenantUser", tenantUserSchema, "users").create({ _id: ownerId });
     } catch (error) {
@@ -34,7 +33,7 @@ const createTenant = async ({companyName, dbName, adminEmail, adminPassword} : c
     }
     finally {
         console.log("Database created... setting connection in cache.")
-        setConnection(companyName, tenantDb);
+        setConnection(tenantName, tenantDb);
     }
 };
 

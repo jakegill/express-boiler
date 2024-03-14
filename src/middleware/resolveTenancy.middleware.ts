@@ -21,16 +21,13 @@ const resolveTenancy = (req: Request, res: Response, next: NextFunction) => {
       const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
       // Extract dbName from token and get the connection from the cache.
-      if (!decoded.dbName) {
+      const tenantName = decoded.tenantName;
+      if (!tenantName) {
         return res.status(400).send({ error: 'Error resolving tenancy: dbName not found in token.' });
       }
-      const tenantDbConnection = getConnection(decoded.dbName);
-      if (!tenantDbConnection) {
-        return res.status(404).send({ error: 'Error resolving tenancy: connection not found in cache.' });
-      }
 
-      // Attach the connection to the request object
-      req.dbConnection = tenantDbConnection;
+      // Attach the db to the request object
+      req.tenantName = tenantName;
       next();
 
   } catch (error) {

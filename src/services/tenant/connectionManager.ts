@@ -20,8 +20,8 @@ const connectAllDb = async () => {
 
     // Establish & cache tenants connections.
     for (const tenant of tenantsMetadata) {
-        const tenantDb: Connection = await initTenantConnection(tenant.dbName);
-        connectionCache[tenant.companyName] = tenantDb;
+        const tenantDbConnection: Connection = await initTenantConnection(tenant.tenantName);
+        connectionCache[tenant.tenantName] = tenantDbConnection;
     }
 };
 

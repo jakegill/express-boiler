@@ -3,10 +3,16 @@ import { createTenant } from "../services/tenant/createTenant";
 
 const createTenantController = async (req: Request, res: Response) => {
 
-    const { companyName, dbName, adminEmail, adminPassword } = req.body;
+    const { tenantName, adminEmail, adminPassword } = req.body;
+    const role = req.role;
+
+    if (role !== "superAdmin") {
+        res.status(403).send("Unauthorized");
+        return;
+    }
     
     try {
-        await createTenant({ companyName, dbName, adminEmail, adminPassword });
+        await createTenant({ tenantName, adminEmail, adminPassword });
         res.status(201).send("Tenant created successfully");
     } catch (error) {
         res.status(500).send("Error creating tenant");
