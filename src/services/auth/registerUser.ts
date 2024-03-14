@@ -16,9 +16,7 @@ const registerUser = async ({ email, password, tenantName }: registerInput) => {
 	}
 
 	// Create user metadata in catalog.
-	const user = await catalog
-		.model("User", userMetadataSchema)
-		.create({ email, password, tenantName });
+	const user = await catalog.model("User", userMetadataSchema).create({ email, password, tenantName });
 	if (!user) {
 		throw new Error("User not created.");
 	}

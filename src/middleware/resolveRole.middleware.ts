@@ -20,9 +20,7 @@ const resolveRole = (req: Request, res: Response, next: NextFunction) => {
 		// Extract role from token.
 		const role = decoded.role;
 		if (!role) {
-			return res
-				.status(400)
-				.send({ error: "Error resolving role: role not found in token." });
+			return res.status(400).send({ error: "Error resolving role: role not found in token." });
 		}
 
 		// Attach role to request object.

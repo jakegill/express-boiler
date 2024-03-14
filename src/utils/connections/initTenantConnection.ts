@@ -2,9 +2,7 @@ import mongoose, { Connection } from "mongoose";
 import { MONGO_URI } from "../../config/constants.config";
 import { TENANT_CONFIG } from "../../config/database.config";
 
-export const initTenantConnection = async (
-	TENANT_DB_NAME: string
-): Promise<Connection> => {
+export const initTenantConnection = async (TENANT_DB_NAME: string): Promise<Connection> => {
 	console.log(`Attempting to establish tenant ${TENANT_DB_NAME} connection...`);
 	try {
 		const db = mongoose.createConnection(`${MONGO_URI}`, {
@@ -14,10 +12,7 @@ export const initTenantConnection = async (
 
 		db.on(
 			"error",
-			console.error.bind(
-				console,
-				"[utils/connections/initTenantConnection] Failed to establish tenant connection: "
-			)
+			console.error.bind(console, "[utils/connections/initTenantConnection] Failed to establish tenant connection: ")
 		);
 
 		await new Promise((resolve, reject) => {

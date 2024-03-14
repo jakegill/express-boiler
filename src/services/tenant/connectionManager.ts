@@ -15,16 +15,11 @@ const connectAllDb = async () => {
 	// Establish & cache catalog connection.
 	const catalog: Connection = await initCatalogConnection();
 	connectionCache["Catalog"] = catalog;
-	const tenantsMetadata = await catalog
-		.model("Tenant", tenantMetadataSchema, "tenants")
-		.find({})
-		.exec();
+	const tenantsMetadata = await catalog.model("Tenant", tenantMetadataSchema, "tenants").find({}).exec();
 
 	// Establish & cache tenants connections.
 	for (const tenant of tenantsMetadata) {
-		const tenantDbConnection: Connection = await initTenantConnection(
-			tenant.tenantName
-		);
+		const tenantDbConnection: Connection = await initTenantConnection(tenant.tenantName);
 		connectionCache[tenant.tenantName] = tenantDbConnection;
 	}
 };

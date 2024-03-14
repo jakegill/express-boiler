@@ -17,10 +17,7 @@ const loginUser = async ({ email, password }: loginInput) => {
 	}
 
 	// Find user in catalog.
-	const user = await catalog
-		.model("User", userMetadataSchema)
-		.findOne({ email })
-		.exec();
+	const user = await catalog.model("User", userMetadataSchema).findOne({ email }).exec();
 	if (!user) {
 		throw new Error("User not found.");
 	}

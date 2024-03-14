@@ -18,30 +18,20 @@ Create a new user document in the users collection of the new tenant db using ad
 Set the new tenant connection in the connection cache.
 */
 
-const createTenant = async ({
-	tenantName,
-	adminEmail,
-	adminPassword,
-}: createTenantInput) => {
+const createTenant = async ({ tenantName, adminEmail, adminPassword }: createTenantInput) => {
 	const catalogDb = getConnection("Catalog");
-	await catalogDb
-		.model("Tenant", tenantMetadataSchema, "tenants")
-		.create({ tenantName });
-	const owner = await catalogDb
-		.model("User", userMetadataSchema, "users")
-		.create({
-			tenantName,
-			email: adminEmail,
-			password: adminPassword,
-			role: "admin",
-		});
+	await catalogDb.model("Tenant", tenantMetadataSchema, "tenants").create({ tenantName });
+	const owner = await catalogDb.model("User", userMetadataSchema, "users").create({
+		tenantName,
+		email: adminEmail,
+		password: adminPassword,
+		role: "admin",
+	});
 	const ownerId = owner._id;
 
 	const tenantDb = await initTenantConnection(tenantName);
 	try {
-		await tenantDb
-			.model("TenantUser", tenantUserSchema, "users")
-			.create({ _id: ownerId });
+		await tenantDb.model("TenantUser", tenantUserSchema, "users").create({ _id: ownerId });
 	} catch (error) {
 		console.error("Error creating new database: ", error);
 		throw error;

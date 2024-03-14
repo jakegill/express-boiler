@@ -22,9 +22,7 @@ const resolveTenancy = (req: Request, res: Response, next: NextFunction) => {
 		// Extract dbName from token and get the connection from the cache.
 		const tenantName = decoded.tenantName;
 		if (!tenantName) {
-			return res
-				.status(400)
-				.send({ error: "Error resolving tenancy: dbName not found in token." });
+			return res.status(400).send({ error: "Error resolving tenancy: dbName not found in token." });
 		}
 
 		// Attach the db to the request object

@@ -10,10 +10,7 @@ export const initCatalogConnection = async (): Promise<Connection> => {
 
 		db.on(
 			"error",
-			console.error.bind(
-				console,
-				"[utils/connections/initCatalogConnection] Failed to connect to catalog: "
-			)
+			console.error.bind(console, "[utils/connections/initCatalogConnection] Failed to connect to catalog: ")
 		);
 
 		await new Promise((resolve, reject) => {
