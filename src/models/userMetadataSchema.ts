@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
-export const userSchema = new mongoose.Schema({
+export const userMetadataSchema = new mongoose.Schema({
+	companyName: {
+		type: String,
+		required: true,
+	},
 	email: {
 		type: String,
 		required: true,
@@ -12,7 +16,7 @@ export const userSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		enum: ["owner", "admin", "management", "inspector"],
+		enum: ["superAdmin","owner", "admin", "management", "inspector"],
 		required: true,
 	},
 	createdAt: {
@@ -24,6 +28,4 @@ export const userSchema = new mongoose.Schema({
 		default: Date.now,
 	},
 });
-
-module.exports = mongoose.model("User", userSchema);
 

@@ -1,5 +1,5 @@
 import type { Connection } from "mongoose";
-import { tenantSchema } from "../../models/tenantSchema";
+import { tenantMetadataSchema } from "../../models/tenantMetadataSchema";
 import { initCatalogConnection } from "../../utils/connections/initCatalogConnection";
 import { initTenantConnection } from "../../utils/connections/initTenantConnection";
 
@@ -16,7 +16,7 @@ const connectAllDb = async () => {
     // Establish & cache catalog connection.
     const catalog: Connection = await initCatalogConnection();
     connectionCache["Catalog"] = catalog;
-    const tenantsMetadata = await catalog.model("Tenant", tenantSchema, "tenants").find({}).exec();
+    const tenantsMetadata = await catalog.model("Tenant", tenantMetadataSchema, "tenants").find({}).exec();
 
     // Establish & cache tenants connections.
     for (const tenant of tenantsMetadata) {

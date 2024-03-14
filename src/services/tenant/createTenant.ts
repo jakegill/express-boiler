@@ -1,7 +1,8 @@
 import { getConnection, setConnection } from "./connectionManager";
 import { initTenantConnection } from "../../utils/connections/initTenantConnection";
-import { tenantSchema } from "../../models/tenantSchema";
-import { userSchema } from "../../models/userSchema";
+import { tenantMetadataSchema } from "../../models/tenantMetadataSchema";
+import { userMetadataSchema } from "../../models/userMetadataSchema";
+import { tenantUserSchema } from "../../models/tenantUserSchema";  
 
 type createTenantInput = {
     companyName: string;
@@ -20,11 +21,21 @@ Set the new tenant connection in the connection cache.
 
 const createTenant = async ({companyName, dbName, adminEmail, adminPassword} : createTenantInput) => {
     const catalogDb = getConnection("Catalog");
-    await catalogDb.model("Tenant", tenantSchema, "tenants").create({ companyName, dbName: companyName });
+    await catalogDb.model("Tenant", tenantMetadataSchema, "tenants").create({ companyName, dbName: companyName });
+    const owner = await catalogDb.model("User", userMetadataSchema, "users").create({ companyName, email: adminEmail, password: adminPassword, role: "owner"});
+    const ownerId = owner._id;
     
     const tenantDb = await initTenantConnection(companyName);
-    await tenantDb.model("User", userSchema, "users").create({ email: adminEmail, password: adminPassword, role: "owner" });
-    setConnection(companyName, tenantDb);
+    try {
+        await tenantDb.model("TenantUser", tenantUserSchema, "users").create({ _id: ownerId });
+    } catch (error) {
+        console.error("Error creating new database: ", error);
+        throw error;
+    }
+    finally {
+        console.log("Database created... setting connection in cache.")
+        setConnection(companyName, tenantDb);
+    }
 };
 
 export { createTenant };
