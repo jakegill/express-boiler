@@ -3,22 +3,28 @@ import { MONGO_URI } from "../../config/constants.config";
 import { CATALOG_CONFIG } from "../../config/database.config";
 
 export const initCatalogConnection = async (): Promise<Connection> => {
-    try {
-        console.log("Attempting to establish catalog connection...")
-        
-        const db = mongoose.createConnection(`${MONGO_URI}`, CATALOG_CONFIG);
+	try {
+		console.log("Attempting to establish catalog connection...");
 
-        db.on("error", console.error.bind(console, "[utils/connections/initCatalogConnection] Failed to connect to catalog: "));
+		const db = mongoose.createConnection(`${MONGO_URI}`, CATALOG_CONFIG);
 
-        await new Promise((resolve, reject) => {
-            db.once("open", resolve);
-            db.on("error", reject);
-        });
+		db.on(
+			"error",
+			console.error.bind(
+				console,
+				"[utils/connections/initCatalogConnection] Failed to connect to catalog: "
+			)
+		);
 
-        console.log("Successfully connected to catalog.");
-        return db;
-    } catch (error) {
-        console.error("Error in initCatalogConnection: ", error);
-        throw error;
-    }
+		await new Promise((resolve, reject) => {
+			db.once("open", resolve);
+			db.on("error", reject);
+		});
+
+		console.log("Successfully connected to catalog.");
+		return db;
+	} catch (error) {
+		console.error("Error in initCatalogConnection: ", error);
+		throw error;
+	}
 };

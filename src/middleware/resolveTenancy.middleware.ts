@@ -8,32 +8,31 @@ The following function needs to know which organization/tenant the user is assoc
 The function will extract the tenants connection from the cache and attach it to the future requests.
 */
 
-
 const resolveTenancy = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).send({ error: 'Unauthorized.' });
-  }
+	const authHeader = req.headers.authorization;
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		return res.status(401).send({ error: "Unauthorized." });
+	}
 
-  const token = authHeader.split(' ')[1];
+	const token = authHeader.split(" ")[1];
 
-  try {
-      const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
-      // Extract dbName from token and get the connection from the cache.
-      const tenantName = decoded.tenantName;
-      if (!tenantName) {
-        return res.status(400).send({ error: 'Error resolving tenancy: dbName not found in token.' });
-      }
+		// Extract dbName from token and get the connection from the cache.
+		const tenantName = decoded.tenantName;
+		if (!tenantName) {
+			return res
+				.status(400)
+				.send({ error: "Error resolving tenancy: dbName not found in token." });
+		}
 
-      // Attach the db to the request object
-      req.tenantName = tenantName;
-      next();
+		// Attach the db to the request object
+		req.tenantName = tenantName;
+		next();
+	} catch (error) {
+		res.status(401).send({ error: "Unauthorized." });
+	}
+};
 
-  } catch (error) {
-      res.status(401).send({ error: 'Unauthorized.' });
-  }
-
-  };
-  
-export { resolveTenancy }
+export { resolveTenancy };

@@ -12,29 +12,33 @@ Exports functions to retrieve connections.
 let connectionCache: Record<string, Connection> = {};
 
 const connectAllDb = async () => {
+	// Establish & cache catalog connection.
+	const catalog: Connection = await initCatalogConnection();
+	connectionCache["Catalog"] = catalog;
+	const tenantsMetadata = await catalog
+		.model("Tenant", tenantMetadataSchema, "tenants")
+		.find({})
+		.exec();
 
-    // Establish & cache catalog connection.
-    const catalog: Connection = await initCatalogConnection();
-    connectionCache["Catalog"] = catalog;
-    const tenantsMetadata = await catalog.model("Tenant", tenantMetadataSchema, "tenants").find({}).exec();
-
-    // Establish & cache tenants connections.
-    for (const tenant of tenantsMetadata) {
-        const tenantDbConnection: Connection = await initTenantConnection(tenant.tenantName);
-        connectionCache[tenant.tenantName] = tenantDbConnection;
-    }
+	// Establish & cache tenants connections.
+	for (const tenant of tenantsMetadata) {
+		const tenantDbConnection: Connection = await initTenantConnection(
+			tenant.tenantName
+		);
+		connectionCache[tenant.tenantName] = tenantDbConnection;
+	}
 };
 
 const getConnection = (key: string): Connection => {
-    return connectionCache[key];
-}
+	return connectionCache[key];
+};
 
 const getAllConnections = (): Record<string, Connection> => {
-    return { ...connectionCache };
-}
+	return { ...connectionCache };
+};
 
 const setConnection = (key: string, connection: Connection) => {
-    connectionCache[key] = connection;
-}
+	connectionCache[key] = connection;
+};
 
-export { connectAllDb, getConnection, setConnection, getAllConnections};
+export { connectAllDb, getConnection, setConnection, getAllConnections };

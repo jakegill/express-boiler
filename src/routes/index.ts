@@ -10,16 +10,26 @@ const router = Router();
 
 /* ---------- Tenant Management ---------- */
 
-router.post("/api/v1/tenants", authMiddleware, resolveRole, createTenantController)
+router.post(
+	"/api/v1/tenants",
+	authMiddleware,
+	resolveRole,
+	createTenantController
+);
 
-router.get("/api/v1/tenants/:id")
-router.put("/api/v1/tenants/:id")
-router.delete("/api/v1/tenants/:id")
+router.get("/api/v1/tenants/:id");
+router.put("/api/v1/tenants/:id");
+router.delete("/api/v1/tenants/:id");
 
 /* ---------- Login & Registration ---------- */
 
-router.post("/api/v1/auth/login", loginUserController)
-router.post("/api/v1/auth/register", authMiddleware, resolveTenancy, resolveRole, registerUserController)
+router.post("/api/v1/auth/login", loginUserController);
+router.post(
+	"/api/v1/auth/register",
+	authMiddleware,
+	resolveTenancy,
+	resolveRole,
+	registerUserController
+);
 
-
-export { router }
+export { router };

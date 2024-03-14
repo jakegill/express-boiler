@@ -28,4 +28,3 @@ export const userMetadataSchema = new mongoose.Schema({
 		default: Date.now,
 	},
 });
-

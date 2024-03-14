@@ -1,8 +1,8 @@
 export const CATALOG_CONFIG = {
-    socketTimeoutMS: 30000,
-    dbName: "Catalog"
+	socketTimeoutMS: 30000,
+	dbName: "Catalog",
 };
 
 export const TENANT_CONFIG = {
-    socketTimeoutMS: 30000,
+	socketTimeoutMS: 30000,
 };
