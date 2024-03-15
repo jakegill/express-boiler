@@ -21,4 +21,7 @@ router.delete("/api/v1/tenants/:id");
 router.post("/api/v1/auth/login", loginUserController);
 router.post("/api/v1/auth/register", authMiddleware, resolveTenancy, resolveRole, registerUserController);
 
+
+
+
 export { router };
